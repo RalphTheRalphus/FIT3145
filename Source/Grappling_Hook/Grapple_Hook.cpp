@@ -33,50 +33,53 @@ void AGrapple_Hook::BeginPlay()
 // Called every frame
 void AGrapple_Hook::Tick(float DeltaTime)
 {
-	if(!hook) // if not attached
-	{	//Moving the hook
-		Super::Tick(DeltaTime);
-		FVector DirectionVec = GetActorForwardVector();
-		FVector CurrLoc = GetActorLocation();
-		CurrLoc += DirectionVec * Speed * DeltaTime;
-		SetActorLocation(CurrLoc);
-
-		//Rotation
-		FRotator Rotator(0, 0, 1000 * DeltaTime); //rotate the yaw
-		FQuat RotationQuaternion(Rotator);
-		AddActorLocalRotation(RotationQuaternion, false, nullptr, ETeleportType::None);
-		if(FVector::Dist(Player->GetActorLocation(), GetActorLocation()) > 3000)
-			Destroy();
-	}
-
-	if(hook) //if attached
+	if(Player)
 	{
-		FVector PlayerToGrapple = GrapplePoint - Player->GetActorLocation();
-		PlayerToGrapple.Normalize(0.0001);
-		FVector vec = Player->GetActorLocation() - GrapplePoint;
-		vec.Normalize();
-		SurfaceNormal.Normalize();
-		if(FVector::DotProduct(SurfaceNormal, vec) > 0)
-		{
-			FVector DirectionVec = PlayerToGrapple + Player->GetFollowCamera()->GetForwardVector();
-			//DirectionVec.Normalize(0.0001);
-			//Player->SetActorLocation(Player->GetActorLocation() + 1000 * DirectionVec * DeltaTime);
-			Player->LaunchCharacter(DirectionVec * 1000 * DeltaTime, false, false);
-			
-			
-		}
-		else //if(FVector::DotProduct(SurfaceNormal, vec) < -0.2)
-		{
-			hook = false;
-			Destroy();
-			Player->GetCharacterMovement()->GravityScale = 1;
-		}
-		if(FVector::Dist(GrapplePoint, Player->GetActorLocation()) < 200 || FVector::Dist(GrapplePoint, Player->GetActorLocation()) > 3000)
-		{
-			hook = false;
-			Destroy();
-			Player->GetCharacterMovement()->GravityScale = 1;
+		
+		if(!hook) // if not attached
+		{	//Moving the hook
+			Super::Tick(DeltaTime);
+			FVector DirectionVec = GetActorForwardVector();
+			FVector CurrLoc = GetActorLocation();
+			CurrLoc += DirectionVec * Speed * DeltaTime;
+			SetActorLocation(CurrLoc);
 
+			//Rotation
+			FRotator Rotator(0, 0, 1000 * DeltaTime); //rotate the yaw
+			FQuat RotationQuaternion(Rotator);
+			AddActorLocalRotation(RotationQuaternion, false, nullptr, ETeleportType::None);
+			if(FVector::Dist(Player->GetActorLocation(), GetActorLocation()) > 3000)
+				Destroy();
+			Player->GetCharacterMovement()->GravityScale = 1;
+			
+		}
+
+		if(hook) //if attached
+		{
+			FVector PlayerToGrapple = GrapplePoint - Player->GetActorLocation();
+			PlayerToGrapple.Normalize(0.0001);
+			FVector vec = Player->GetActorLocation() - GrapplePoint;
+			vec.Normalize();
+			SurfaceNormal.Normalize();
+			if(FVector::DotProduct(SurfaceNormal, vec) > 0)
+			{
+				FVector DirectionVec = PlayerToGrapple + Player->GetFollowCamera()->GetForwardVector();
+				//DirectionVec.Normalize(0.0001);
+				//Player->SetActorLocation(Player->GetActorLocation() + 1000 * DirectionVec * DeltaTime);
+				Player->LaunchCharacter(DirectionVec * 1000 * DeltaTime, false, false);
+				
+				
+			}
+			else //if(FVector::DotProduct(SurfaceNormal, vec) < -0.2)
+			{
+				hook = false;
+				Destroy();
+			}
+			if(FVector::Dist(GrapplePoint, Player->GetActorLocation()) < 200 || FVector::Dist(GrapplePoint, Player->GetActorLocation()) > 3000)
+			{
+				hook = false;
+				Destroy();
+			}
 		}
 	}
 }
@@ -88,7 +91,7 @@ void AGrapple_Hook::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, cl
 	hook = true;
 	GrapplePoint = GetActorLocation();
 	// get reference to attached object
-	Player->GetCharacterMovement()->GravityScale = 0.25;
-	Player->LaunchCharacter(FVector(0,0,200), false, true);
+	Player->GetCharacterMovement()->GravityScale = 0.35;
+	Player->LaunchCharacter(FVector(0,0,500), false, true);
 }
 

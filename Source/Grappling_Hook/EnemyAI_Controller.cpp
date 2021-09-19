@@ -2,6 +2,9 @@
 
 
 #include "EnemyAI_Controller.h"
+#include "Enemy.h"
+
+#include "GameFramework/Character.h"
 
 AEnemyAI_Controller::AEnemyAI_Controller()
 {
@@ -101,8 +104,16 @@ void AEnemyAI_Controller::EnemyAttack()
 {
 	if(NiagaraSystem && Player)
 	{
-		UNiagaraComponent* SpawnEffect = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), NiagaraSystem, Player->GetActorLocation(), Player->GetActorRotation(),
+		AEnemy* EnemyCharacter = Cast<AEnemy>(GetPawn());
+		if(EnemyCharacter)
+		{
+			FVector weaponLoc =  EnemyCharacter->GetMesh()->GetSocketLocation("EnemyWeapon");
+			//GEngine->AddOnScreenDebugMessage(7, 1, FColor::Green, FString::Printf(TEXT("Enemy weapon loaded %s"), *weaponLoc.ToString()));
+			UNiagaraComponent* SpawnEffect = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), NiagaraSystem, weaponLoc,
+				(Player->GetActorLocation() - weaponLoc).Rotation(),
 			FVector(1,1,1));
+		}
+		
 	}
 }
 

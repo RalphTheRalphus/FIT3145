@@ -26,4 +26,9 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	//Enemy Attributes
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	float Health = 100;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	float Shield = 100;
 };

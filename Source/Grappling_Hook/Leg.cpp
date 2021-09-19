@@ -31,11 +31,11 @@ FVector ULeg::TraceFootTargetLocation()
 	RayHeight = RayEnd + (GetComponentLocation().DownVector * StepHeight);
 	
 	bool isHit = GetWorld()->LineTraceSingleByChannel(OutHit, RayStart, RayEnd, ECC_Visibility);
-	DrawDebugLine(GetWorld(), RayStart, RayEnd, FColor::Red, false, -1, 0, 1);
+	//DrawDebugLine(GetWorld(), RayStart, RayEnd, FColor::Red, false, -1, 0, 1);
 	if(!isHit)
 	{
 		isHit = GetWorld()->LineTraceSingleByChannel(OutHit, RayEnd, RayHeight, ECC_Visibility);
-		DrawDebugLine(GetWorld(), RayEnd, RayHeight, FColor::Red, false, -1, 0, 1);
+		//DrawDebugLine(GetWorld(), RayEnd, RayHeight, FColor::Red, false, -1, 0, 1);
 		if(!isHit)
 		{
 			FVector SideStart = RayEnd + (FVector::CrossProduct(GetComponentLocation().UpVector, GetForwardVector()) * SideStepLength);
@@ -45,7 +45,7 @@ FVector ULeg::TraceFootTargetLocation()
 		if(isHit)
 		{
 			SwingLeg = true;
-			DrawDebugPoint(GetWorld(), OutHit.Location, 25, FColor::Yellow, false);
+			//DrawDebugPoint(GetWorld(), OutHit.Location, 25, FColor::Yellow, false);
 			return OutHit.Location;
 		}
 	}
@@ -66,12 +66,12 @@ bool ULeg::TraceSideTargetLocation(FVector Start, FVector End)
 	{
 		FVector RightSideEnd = Start + (GetComponentLocation().DownVector * StepHeight);
 		isHit = GetWorld()->LineTraceSingleByChannel(OutHit, Start, RightSideEnd, ECC_Visibility);
-		DrawDebugLine(GetWorld(), Start, RightSideEnd, FColor::Red, false);
+		//DrawDebugLine(GetWorld(), Start, RightSideEnd, FColor::Red, false);
 		if(!isHit)
 		{
 			FVector LeftSideEnd = End + (GetComponentLocation().DownVector * StepHeight);
 			isHit = GetWorld()->LineTraceSingleByChannel(OutHit, End, LeftSideEnd, ECC_Visibility);
-			DrawDebugLine(GetWorld(), End, LeftSideEnd, FColor::Red, false);
+			//DrawDebugLine(GetWorld(), End, LeftSideEnd, FColor::Red, false);
 			if(!isHit)
 			{
 				StepLength += 3;

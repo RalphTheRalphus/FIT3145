@@ -65,8 +65,9 @@ void AGrappling_HookCharacter::SetupPlayerInputComponent(class UInputComponent* 
 	PlayerInputComponent->BindAction("ThrowDisc", IE_Pressed, this, &AGrappling_HookCharacter::ThrowDisc);
 	//Grapple Dsic
 	PlayerInputComponent->BindAction("GrappleDisc", IE_Pressed, this, &AGrappling_HookCharacter::Grapple);
-	//Shoot
+	//Shoot and Skill
 	PlayerInputComponent->BindAction("Shoot", IE_Pressed, this, &AGrappling_HookCharacter::Shoot);
+	PlayerInputComponent->BindAction("Skill", IE_Pressed, this, &AGrappling_HookCharacter::Skill);
 	
 	PlayerInputComponent->BindAxis("MoveForward", this, &AGrappling_HookCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AGrappling_HookCharacter::MoveRight);
@@ -100,6 +101,8 @@ void AGrappling_HookCharacter::Tick(float DeltaSeconds)
 	Start = GetFollowCamera()->GetComponentLocation() + GetFollowCamera()->GetForwardVector() * 150;
 	End = Start + GetFollowCamera()->GetForwardVector() * 3000;
 	GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECollisionChannel::ECC_Visibility);
+	//Check if the player can grapple on surface and change UI element accordingly
+	CanGrapple();
 	//DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 1, 0,1);
 }
 
@@ -112,6 +115,16 @@ void AGrappling_HookCharacter::ThrowDisc()
 	}
 }
 
+void AGrappling_HookCharacter::CanGrapple()
+{
+	if(GrappleHook_Class && OutHit.bBlockingHit && OutHit.GetActor() && OutHit.GetActor()->bGenerateOverlapEventsDuringLevelStreaming)
+	{
+		CanGrappleToSurface = true;
+	}
+	else
+		CanGrappleToSurface = false;
+}
+
 void AGrappling_HookCharacter::Grapple()
 {
 	if(GrappleHooked)
@@ -120,12 +133,15 @@ void AGrappling_HookCharacter::Grapple()
 		Grapple_Hook->hook = false;
 		Grapple_Hook->Destroy();
 	}
-	if(GrappleHook_Class && OutHit.bBlockingHit && OutHit.GetActor()->bGenerateOverlapEventsDuringLevelStreaming)
+	if(OutHit.GetActor())
 	{
-		FVector SpawnLoc = (GetFollowCamera()->GetForwardVector() * 150) + (GetActorLocation() + FVector(0,0,100));
-		Grapple_Hook = GetWorld()->SpawnActor<AGrapple_Hook>(GrappleHook_Class, SpawnLoc, (OutHit.Location - SpawnLoc).Rotation());
-		Grapple_Hook->SurfaceNormal = OutHit.ImpactNormal;
-		GrappleHooked = true;
+		if(GrappleHook_Class && OutHit.bBlockingHit && OutHit.GetActor()->bGenerateOverlapEventsDuringLevelStreaming)
+		{
+			FVector SpawnLoc = (GetFollowCamera()->GetForwardVector() * 150) + (GetActorLocation() + FVector(0,0,100));
+			Grapple_Hook = GetWorld()->SpawnActor<AGrapple_Hook>(GrappleHook_Class, SpawnLoc, (OutHit.Location - SpawnLoc).Rotation());
+			Grapple_Hook->SurfaceNormal = OutHit.ImpactNormal;
+			GrappleHooked = true;
+		}
 	}
 }
 
@@ -134,6 +150,14 @@ void AGrappling_HookCharacter::Shoot()
 	if(PlayerWeaponClass)
 	{
 		PlayerWeapon->Shoot();
+	}
+}
+
+void AGrappling_HookCharacter::Skill()
+{
+	if(PlayerWeaponClass)
+	{
+		PlayerWeapon->Skill();	
 	}
 }
 

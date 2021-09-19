@@ -22,6 +22,10 @@ void AEnemy::BeginPlay()
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	if(Health <= 0)
+	{
+		Destroy();
+	}
 
 }
 

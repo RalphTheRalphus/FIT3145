@@ -2,7 +2,7 @@
 
 
 #include "WeaponProjectile.h"
-
+#include "Enemy.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 
 // Sets default values
@@ -23,34 +23,51 @@ void AWeaponProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 	DirectionalVec = GetActorForwardVector();
-
+	
+	if(PhysicsEnabled)
+		ProjectileMesh->SetSimulatePhysics(true);
+	
+	if(Grenade)
+	{
+		ProjectileMesh->AddForce(GetActorForwardVector() * 250000);
+	}
 }
 
 // Called every frame
 void AWeaponProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	FVector CurrLoc = GetActorLocation();
-	CurrLoc += DirectionalVec * DeltaTime * 2000;
-	SetActorLocation(CurrLoc);
-	// Destroy projectile after delay
-	if(ShootDelay > 0)
-		ShootDelay -= DeltaTime;
-	if(ShootDelay <= 0)
-	{
-		SpawnDestroyEffect(GetActorLocation());
-		Destroy();
+
+	if(Bullet)
+	{		
+		FVector CurrLoc = GetActorLocation();
+		CurrLoc += DirectionalVec * DeltaTime * 2000;
+		SetActorLocation(CurrLoc);
+		// Destroy projectile after delay
+		if(ShootDelay > 0)
+			ShootDelay -= DeltaTime;
+		if(ShootDelay <= 0)
+		{
+			SpawnDestroyEffect(GetActorLocation());
+			Destroy();
+		}
 	}
+
 }
 
 void AWeaponProjectile::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* Other, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
 	const FHitResult& SweepResult)
 {
-	GEngine->AddOnScreenDebugMessage(2,1,FColor::Red,TEXT("HIT!!!"));
-	FString Name = Other->GetName();
+	//GEngine->AddOnScreenDebugMessage(2,1,FColor::Red,TEXT("HIT!!!"));
+	AEnemy* Enemy = Cast<AEnemy>(Other);
+	if(Enemy)
+	{
+		Enemy->Health -= 10;
+		//GEngine->AddOnScreenDebugMessage(4,1,FColor::Red,FString::Printf(TEXT("Enemy Hit : Health %f!!!"), Enemy->Health));
+		
+	}
 	SpawnDestroyEffect(SweepResult.Location);
 	Destroy();
-	UE_LOG(LogTemp, Warning, TEXT("HIT"));
 }
 
 void AWeaponProjectile::SpawnDestroyEffect(FVector SpawnLoc)

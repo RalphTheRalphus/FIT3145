@@ -24,10 +24,18 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Projectile")
 	TSubclassOf<AWeaponProjectile> WeaponProjectileClass;
 	AWeaponProjectile* WeaponProjectile;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Projectile")
+	TSubclassOf<AWeaponProjectile> SkillProjectileClass;
+	AWeaponProjectile* SkillProjectile;
+	
 	//ShootDelay
 	UPROPERTY(EditDefaultsOnly, Category = "Shoot Timeout")
 	float ShootDelay;
-	float Timer;
+	UPROPERTY(EditDefaultsOnly, Category = "Skill Timer")
+	float SkillDelay;
+	float ShootTimer;
+	float SkillTimer;
 	
 protected:
 	// Called when the game starts or when spawned
@@ -38,6 +46,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	AGrappling_HookCharacter* Player;
 	void Shoot();
+	void Skill();
 	bool RotateFire;
 	float RotateTimeOut;
 };

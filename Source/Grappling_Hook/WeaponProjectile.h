@@ -25,6 +25,18 @@ public:
 	//VFX
 	UPROPERTY(EditDefaultsOnly, Category = "Effects")
 	UNiagaraSystem* NiagaraSystem;
+	//Has Physics enabled
+	UPROPERTY(EditDefaultsOnly, Category = "Physics Enabled")
+	bool PhysicsEnabled;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Projectile Type")
+	bool Skill;
+	UPROPERTY(EditDefaultsOnly, Category = "Projectile Type")
+	bool MainProjectile;
+	UPROPERTY(EditDefaultsOnly, Category = "Projectile Type")
+	bool Bullet;
+	UPROPERTY(EditDefaultsOnly, Category = "Projectile Type")
+	bool Grenade;
 
 protected:
 	// Called when the game starts or when spawned

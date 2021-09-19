@@ -91,13 +91,28 @@ public:
 	UFUNCTION()
 	void Grapple();
 	UFUNCTION()
+	void CanGrapple();
+	UFUNCTION()
 	void Shoot();
+	UFUNCTION()
+	void Skill();
 
 	//Trace
+	UPROPERTY()
 	FHitResult OutHit;
 	FVector Start;
 	FVector End;
 	ECollisionChannel CollisionChannel;
+
+	//Player Attributes
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	float Health = 75;
+	UPROPERTY(VisibleAnywhere)
+	float MaxHealth = 100;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	float Ammo = 100;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool CanGrappleToSurface;
 
 };
 
