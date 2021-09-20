@@ -1,8 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
+#include "DamageOnOverlap.h"
 #include "Kismet/GameplayStatics.h"
 #include "Grappling_HookCharacter.h"
-#include "DamageOnOverlap.h"
 
 // Sets default values
 ADamageOnOverlap::ADamageOnOverlap()

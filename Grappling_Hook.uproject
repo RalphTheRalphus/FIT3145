@@ -24,6 +24,14 @@
 		{
 			"Name": "FullBodyIK",
 			"Enabled": true
+		},
+		{
+			"Name": "Water",
+			"Enabled": true
+		},
+		{
+			"Name": "ShallowWater",
+			"Enabled": true
 		}
 	]
 }
