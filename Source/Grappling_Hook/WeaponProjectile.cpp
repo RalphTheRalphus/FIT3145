@@ -45,9 +45,29 @@ void AWeaponProjectile::Tick(float DeltaTime)
 		CurrLoc += DirectionalVec * DeltaTime * 2000;
 		SetActorLocation(CurrLoc);
 	}
-	if(ProjTimerRef <= 0)
+	if(Grenade && ProjTimerRef <= 0)
 	{
-		SpawnDestroyEffect(GetActorLocation());
+		float count = 0;
+		Start = ProjectileMesh->GetComponentLocation();
+		FCollisionShape CollisionShape = FCollisionShape::MakeSphere(800);
+		bool IsHit = GetWorld()->SweepMultiByChannel(OutHits, Start, Start, FQuat::Identity, ECC_GameTraceChannel3, CollisionShape);
+		if(IsHit)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Hit"));
+			TArray<AEnemy*> IgnoreEnemy;
+			for(auto& OutHit: OutHits)
+			{
+				AEnemy* Enemy = Cast<AEnemy>(OutHit.GetActor());
+				if(Enemy && !IgnoreEnemy.Contains(Enemy))
+				{
+					IgnoreEnemy.Add(Enemy);
+					Enemy->Health -= DamageAmount;
+					SpawnDestroyEffect(Enemy->GetActorLocation());
+					
+				}
+				
+			}
+		}
 		Destroy();
 	}
 
@@ -57,14 +77,15 @@ void AWeaponProjectile::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp
 	const FHitResult& SweepResult)
 {
 	//GEngine->AddOnScreenDebugMessage(2,1,FColor::Red,TEXT("HIT!!!"));
-	AEnemy* Enemy = Cast<AEnemy>(Other);
-	if(Enemy)
+	AEnemy* EnemyCharacter = Cast<AEnemy>(Other);
+	if(EnemyCharacter)
 	{
-		Enemy->Health -= 10;
+		EnemyCharacter->Health -= DamageAmount;
 		//GEngine->AddOnScreenDebugMessage(4,1,FColor::Red,FString::Printf(TEXT("Enemy Hit : Health %f!!!"), Enemy->Health));
 		
 	}
-	SpawnDestroyEffect(SweepResult.Location);
+
+	SpawnDestroyEffect(GetActorLocation());
 	Destroy();
 }
 
@@ -72,7 +93,7 @@ void AWeaponProjectile::SpawnDestroyEffect(FVector SpawnLoc)
 {
 	if(NiagaraSystem)
 	{
-		UNiagaraComponent* SpawnEffect = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), NiagaraSystem, GetActorLocation(), GetActorRotation(),
+		UNiagaraComponent* SpawnEffect = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), NiagaraSystem, SpawnLoc, GetActorRotation(),
 			FVector(1,1,1));
 	}
 }

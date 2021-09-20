@@ -74,7 +74,7 @@ void APlayerWeapon::Shoot()
 		RotateTimeOut = 0.5f;
 		if(WeaponProjectileClass)
 		{
-			GEngine->AddOnScreenDebugMessage(1,1,FColor::Red, TEXT("FIRE!!!!"));
+			//GEngine->AddOnScreenDebugMessage(1,1,FColor::Red, TEXT("FIRE!!!!"));
 			FVector SpawnLoc = GetActorLocation();
 			WeaponProjectile = GetWorld()->SpawnActor<AWeaponProjectile>(WeaponProjectileClass, SpawnLoc, GetActorRotation());
 		}
