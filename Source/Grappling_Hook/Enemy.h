@@ -3,9 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "DamageOnOverlap.h"
 #include "GameFramework/Character.h"
 #include "Enemy.generated.h"
 
+//class ADamageOnOverlap;
 UCLASS()
 class GRAPPLING_HOOK_API AEnemy : public ACharacter
 {
@@ -31,4 +33,13 @@ public:
 	float Health = 100;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float Shield = 100;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Enemy Attack")
+	float AttackDistance;
+	UPROPERTY(EditDefaultsOnly, Category = "Enemy Attack")
+	float AttackSpeed;
+
+	//Enemy weapon
+	UPROPERTY(EditDefaultsOnly, Category = "Enemy Weapon")
+	TSubclassOf<ADamageOnOverlap> EnemyWeaponClass;
 };

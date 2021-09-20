@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
+#include "DamageOnOverlap.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "NiagaraFunctionLibrary.h"
@@ -58,4 +59,9 @@ public:
 	//Niagara for attacks
 	UPROPERTY(EditDefaultsOnly, Category = "Effects")
 	UNiagaraSystem* NiagaraSystem;
+
+	//Aim Start and attack distance
+	FRotator WeaponRot;
+	float AttackDist;
+	ADamageOnOverlap* EnemyWeapon;
 };

@@ -98,6 +98,11 @@ void AGrappling_HookCharacter::BeginPlay()
 void AGrappling_HookCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+
+	if(Health <= 0)
+	{
+		GameOver = true;
+	}
 	Start = GetFollowCamera()->GetComponentLocation() + GetFollowCamera()->GetForwardVector() * 150;
 	End = Start + GetFollowCamera()->GetForwardVector() * 3000;
 	GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECollisionChannel::ECC_Visibility);

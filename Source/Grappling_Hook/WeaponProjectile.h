@@ -20,8 +20,7 @@ public:
 	//Projectile Mesh
 	UPROPERTY(EditDefaultsOnly, Category = "Projectile Mesh")
 	UStaticMeshComponent* ProjectileMesh;
-	//Shoot Delay
-	float ShootDelay;
+	
 	//VFX
 	UPROPERTY(EditDefaultsOnly, Category = "Effects")
 	UNiagaraSystem* NiagaraSystem;
@@ -29,14 +28,18 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Physics Enabled")
 	bool PhysicsEnabled;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Projectile Type")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Projectile Type")
 	bool Skill;
-	UPROPERTY(EditDefaultsOnly, Category = "Projectile Type")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Projectile Type")
 	bool MainProjectile;
-	UPROPERTY(EditDefaultsOnly, Category = "Projectile Type")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Projectile Type")
 	bool Bullet;
-	UPROPERTY(EditDefaultsOnly, Category = "Projectile Type")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Projectile Type")
 	bool Grenade;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Projectile Type")
+	float ProjectileTimer;
+
+	float ProjTimerRef;
 
 protected:
 	// Called when the game starts or when spawned

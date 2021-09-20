@@ -3,7 +3,6 @@
 
 #include "EnemyAI_Controller.h"
 #include "Enemy.h"
-
 #include "GameFramework/Character.h"
 
 AEnemyAI_Controller::AEnemyAI_Controller()
@@ -45,6 +44,18 @@ void AEnemyAI_Controller::BeginPlay()
 	NavSystem = Cast<UNavigationSystemV1>(GetWorld()->GetNavigationSystem());
 	BlackboardComponent->SetValueAsBool("Patrol", true);
 	RandomEnemyPatrol();
+
+	AEnemy* Enemy = Cast<AEnemy>(GetPawn());
+	if(Enemy)
+	{
+		WeaponRot = Enemy->GetMesh()->GetSocketRotation("EnemyWeapon");
+		AttackDist = Enemy->AttackDistance;
+		if(Enemy->EnemyWeaponClass)
+		{
+			EnemyWeapon = GetWorld()->SpawnActor<ADamageOnOverlap>(Enemy->EnemyWeaponClass);
+			//Enemy->EnemyWeapon->AttachToActor(Enemy, FAttachmentTransformRules::KeepRelativeTransform, "EnemyWeapon");
+		}
+	}
 }
 
 void AEnemyAI_Controller::Tick(float DeltaSeconds)
@@ -55,7 +66,7 @@ void AEnemyAI_Controller::Tick(float DeltaSeconds)
 	{
 		BlackboardComponent->SetValueAsVector("PlayerLoc", Player->GetActorLocation());
 		float dist = FVector::Dist(GetPawn()->GetActorLocation(), Player->GetActorLocation());
-		if(FVector::Dist(GetPawn()->GetActorLocation(), Player->GetActorLocation()) < 750)
+		if(dist < AttackDist)
 		{
 			BlackboardComponent->SetValueAsBool("Chase", false);
 			BlackboardComponent->SetValueAsBool("Attack", true);
@@ -104,16 +115,29 @@ void AEnemyAI_Controller::EnemyAttack()
 {
 	if(NiagaraSystem && Player)
 	{
+		FRotator FacePlayer = (Player->GetActorLocation() - GetPawn()->GetActorLocation()).Rotation();
+
+		FRotator FaceRotSpeed = FMath::Lerp(GetPawn()->GetActorRotation(), FRotator(0, FacePlayer.Yaw, 0), 0.5);
+		GetPawn()->SetActorRotation(FaceRotSpeed);
+
 		AEnemy* EnemyCharacter = Cast<AEnemy>(GetPawn());
 		if(EnemyCharacter)
 		{
 			FVector weaponLoc =  EnemyCharacter->GetMesh()->GetSocketLocation("EnemyWeapon");
-			//GEngine->AddOnScreenDebugMessage(7, 1, FColor::Green, FString::Printf(TEXT("Enemy weapon loaded %s"), *weaponLoc.ToString()));
-			UNiagaraComponent* SpawnEffect = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), NiagaraSystem, weaponLoc,
-				(Player->GetActorLocation() - weaponLoc).Rotation(),
-			FVector(1,1,1));
+			FRotator AimRot = (Player->GetActorLocation() - weaponLoc).Rotation();
+			FRotator AimRotSpeed = FMath::RInterpTo(WeaponRot, AimRot, FApp::GetDeltaTime(), EnemyCharacter->AttackSpeed);
+			WeaponRot = AimRotSpeed;
+			// damage on overlap cast
+			
+			if(EnemyWeapon)
+			{
+				UNiagaraComponent* SpawnEffect = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), EnemyWeapon->NiagaraSystem, weaponLoc, AimRotSpeed,
+				FVector(1,1,1));
+				EnemyWeapon->SetActorRotation(AimRotSpeed);
+				EnemyWeapon->SetActorLocation(weaponLoc);
+			}
+
 		}
-		
 	}
 }
 

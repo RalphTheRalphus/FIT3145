@@ -15,7 +15,6 @@ AWeaponProjectile::AWeaponProjectile()
 	ProjectileMesh->SetupAttachment(RootComponent);
 
 	ProjectileMesh->OnComponentBeginOverlap.AddDynamic(this, &AWeaponProjectile::OnOverlapBegin);
-	ShootDelay = 5.f;
 }
 
 // Called when the game starts or when spawned
@@ -31,26 +30,25 @@ void AWeaponProjectile::BeginPlay()
 	{
 		ProjectileMesh->AddForce(GetActorForwardVector() * 250000);
 	}
+	ProjTimerRef = ProjectileTimer;
 }
 
 // Called every frame
 void AWeaponProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	ProjTimerRef -= DeltaTime;
 
 	if(Bullet)
 	{		
 		FVector CurrLoc = GetActorLocation();
 		CurrLoc += DirectionalVec * DeltaTime * 2000;
 		SetActorLocation(CurrLoc);
-		// Destroy projectile after delay
-		if(ShootDelay > 0)
-			ShootDelay -= DeltaTime;
-		if(ShootDelay <= 0)
-		{
-			SpawnDestroyEffect(GetActorLocation());
-			Destroy();
-		}
+	}
+	if(ProjTimerRef <= 0)
+	{
+		SpawnDestroyEffect(GetActorLocation());
+		Destroy();
 	}
 
 }

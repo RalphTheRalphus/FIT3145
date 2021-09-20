@@ -105,7 +105,7 @@ public:
 	ECollisionChannel CollisionChannel;
 
 	//Player Attributes
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	float Health = 75;
 	UPROPERTY(VisibleAnywhere)
 	float MaxHealth = 100;
@@ -113,6 +113,7 @@ public:
 	float Ammo = 100;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool CanGrappleToSurface;
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool GameOver;
 };
 

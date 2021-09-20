@@ -91,7 +91,7 @@ void AGrapple_Hook::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, cl
 	hook = true;
 	GrapplePoint = GetActorLocation();
 	// get reference to attached object
-	Player->GetCharacterMovement()->GravityScale = 0.35;
+	Player->GetCharacterMovement()->GravityScale = 0.15;
 	Player->LaunchCharacter(FVector(0,0,500), false, true);
 }
 
