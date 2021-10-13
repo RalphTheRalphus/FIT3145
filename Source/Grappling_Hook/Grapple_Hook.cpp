@@ -6,6 +6,7 @@
 
 #include "Kismet/GameplayStatics.h"
 #include "Camera/CameraComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
@@ -50,14 +51,12 @@ void AGrapple_Hook::Tick(float DeltaTime)
 			AddActorLocalRotation(RotationQuaternion, false, nullptr, ETeleportType::None);
 			if(FVector::Dist(Player->GetActorLocation(), GetActorLocation()) > 3000)
 				Destroy();
-			Player->GetCharacterMovement()->GravityScale = 1;
-			
 		}
 
 		if(hook) //if attached
 		{
 			FVector PlayerToGrapple = GrapplePoint - Player->GetActorLocation();
-			PlayerToGrapple.Normalize(0.0001);
+			PlayerToGrapple.Normalize(0.001);
 			FVector vec = Player->GetActorLocation() - GrapplePoint;
 			vec.Normalize();
 			SurfaceNormal.Normalize();
@@ -66,16 +65,18 @@ void AGrapple_Hook::Tick(float DeltaTime)
 				FVector DirectionVec = PlayerToGrapple + Player->GetFollowCamera()->GetForwardVector();
 				//DirectionVec.Normalize(0.0001);
 				//Player->SetActorLocation(Player->GetActorLocation() + 1000 * DirectionVec * DeltaTime);
-				Player->LaunchCharacter(DirectionVec * 1100 * DeltaTime, false, false);
+				Player->LaunchCharacter(DirectionVec * 2000 * DeltaTime, false, false);
 			}
 			else //if(FVector::DotProduct(SurfaceNormal, vec) < -0.2)
 			{
 				hook = false;
+				Player->LaunchCharacter(FVector(0,0,-1000), false, false);
 				Destroy();
 			}
 			if(FVector::Dist(GrapplePoint, Player->GetActorLocation()) < 200 || FVector::Dist(GrapplePoint, Player->GetActorLocation()) > 3000)
 			{
 				hook = false;
+				Player->LaunchCharacter(FVector(0,0,-1000), false, false);
 				Destroy();
 			}
 		}
@@ -89,7 +90,6 @@ void AGrapple_Hook::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, cl
 	hook = true;
 	GrapplePoint = GetActorLocation();
 	// get reference to attached object
-	Player->GetCharacterMovement()->GravityScale = 0.20;
 	Player->LaunchCharacter(FVector(0,0,500), false, true);
 }
 

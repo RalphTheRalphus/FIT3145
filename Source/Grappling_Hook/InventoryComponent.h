@@ -3,19 +3,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/SceneComponent.h"
-#include "PlayerWeaponProjectile.generated.h"
+#include "Components/ActorComponent.h"
+#include "InventoryComponent.generated.h"
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class GRAPPLING_HOOK_API UPlayerWeaponProjectile : public USceneComponent
+class GRAPPLING_HOOK_API UInventoryComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UPlayerWeaponProjectile();
-
+	UInventoryComponent();
 
 protected:
 	// Called when the game starts

@@ -5,6 +5,7 @@
 #include "PlayerWeapon.h"
 #include "BioLegs.h"
 #include "Grapple_Hook.h"
+#include "Action_Interface.h"
 #include "DrawDebugHelpers.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -49,6 +50,9 @@ AGrappling_HookCharacter::AGrappling_HookCharacter()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+
+	//overlapped component
+	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AGrappling_HookCharacter::OnOverlapBegin);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -68,6 +72,14 @@ void AGrappling_HookCharacter::SetupPlayerInputComponent(class UInputComponent* 
 	//Shoot and Skill
 	PlayerInputComponent->BindAction("Shoot", IE_Pressed, this, &AGrappling_HookCharacter::Shoot);
 	PlayerInputComponent->BindAction("Skill", IE_Pressed, this, &AGrappling_HookCharacter::Skill);
+	//Glide and stop glide
+	PlayerInputComponent->BindAction("Glide", IE_Pressed, this, &AGrappling_HookCharacter::Glide);
+	PlayerInputComponent->BindAction("Glide", IE_Released, this, &AGrappling_HookCharacter::StopGlide);
+	//Collect Resources
+	PlayerInputComponent->BindAction("Collect", IE_Pressed, this, &AGrappling_HookCharacter::CollectResource);
+	//Show Inventory
+	PlayerInputComponent->BindAction("ShowInventory", IE_Pressed, this, &AGrappling_HookCharacter::ShowInventory);
+	
 	
 	PlayerInputComponent->BindAxis("MoveForward", this, &AGrappling_HookCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AGrappling_HookCharacter::MoveRight);
@@ -138,9 +150,9 @@ void AGrappling_HookCharacter::Grapple()
 		Grapple_Hook->hook = false;
 		Grapple_Hook->Destroy();
 	}
-	if(OutHit.GetActor())
+	if(OutHit.bBlockingHit && OutHit.GetActor())
 	{
-		if(GrappleHook_Class && OutHit.bBlockingHit && OutHit.GetActor()->bGenerateOverlapEventsDuringLevelStreaming)
+		if(GrappleHook_Class && OutHit.GetActor()->bGenerateOverlapEventsDuringLevelStreaming)
 		{
 			FVector SpawnLoc = (GetFollowCamera()->GetForwardVector() * 150) + (GetActorLocation() + FVector(0,0,100));
 			Grapple_Hook = GetWorld()->SpawnActor<AGrapple_Hook>(GrappleHook_Class, SpawnLoc, (OutHit.Location - SpawnLoc).Rotation());
@@ -163,6 +175,49 @@ void AGrappling_HookCharacter::Skill()
 	if(PlayerWeaponClass)
 	{
 		PlayerWeapon->Skill();	
+	}
+}
+
+void AGrappling_HookCharacter::Glide()
+{
+	GetCharacterMovement()->GravityScale = 0.40;
+}
+
+void AGrappling_HookCharacter::StopGlide()
+{
+	GetCharacterMovement()->GravityScale = 1;
+}
+
+void AGrappling_HookCharacter::CollectResource()
+{
+	if(OverlappingActor)
+	{
+		if(OverlappingActor->GetClass()->ImplementsInterface(UAction_Interface::StaticClass()))
+		{
+			IAction_Interface::Execute_Actions(OverlappingActor);
+		}
+	}
+}
+
+void AGrappling_HookCharacter::ShowInventory()
+{
+	for(int i = 0; i < Inventory.Num(); i++)
+	{
+		GEngine->AddOnScreenDebugMessage(i, 3, FColor::Green, FString::Printf(TEXT("Inventory: %s"), *Inventory[i]->GetName()));
+	}
+}
+
+// overlap event
+void AGrappling_HookCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Other,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if(Other && (Other != this))
+	{
+		OverlappingActor = Other;
+		if(OverlappingActor->GetClass()->ImplementsInterface(UPickup_interface::StaticClass()))
+		{
+			IPickup_interface::Execute_Pickups(OverlappingActor);
+		}
 	}
 }
 

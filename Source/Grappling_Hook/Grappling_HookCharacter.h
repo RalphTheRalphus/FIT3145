@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Pickup_interface.h"
 #include "Grappling_HookCharacter.generated.h"
 
 class ABioLegs;
@@ -96,6 +97,14 @@ public:
 	void Shoot();
 	UFUNCTION()
 	void Skill();
+	UFUNCTION()
+	void Glide();
+	UFUNCTION()
+	void StopGlide();
+	UFUNCTION()
+	void CollectResource();
+	UFUNCTION()
+	void ShowInventory();
 
 	//Trace
 	UPROPERTY()
@@ -115,5 +124,13 @@ public:
 	bool CanGrappleToSurface;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool GameOver;
+
+	//Player Inventory
+	TArray<AActor*> Inventory;
+	AActor* OverlappingActor;
+	
+	UFUNCTION()
+	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* Other, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
 };
 
