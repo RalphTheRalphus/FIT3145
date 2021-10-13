@@ -213,6 +213,7 @@ void AGrappling_HookCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedCom
 {
 	if(Other && (Other != this))
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Overlapped"));
 		OverlappingActor = Other;
 		if(OverlappingActor->GetClass()->ImplementsInterface(UPickup_interface::StaticClass()))
 		{
