@@ -126,6 +126,7 @@ public:
 	bool GameOver;
 
 	//Player Inventory
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	TArray<AActor*> Inventory;
 	AActor* OverlappingActor;
 	
