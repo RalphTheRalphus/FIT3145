@@ -4,6 +4,7 @@
 #include "WeaponProjectile.h"
 #include "Enemy.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AWeaponProjectile::AWeaponProjectile()
@@ -22,7 +23,6 @@ void AWeaponProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 	DirectionalVec = GetActorForwardVector();
-	
 	if(PhysicsEnabled)
 		ProjectileMesh->SetSimulatePhysics(true);
 	

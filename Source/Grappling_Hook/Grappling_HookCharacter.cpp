@@ -46,7 +46,7 @@ AGrappling_HookCharacter::AGrappling_HookCharacter()
 	// Create a follow camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
-	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+	FollowCamera->bUsePawnControlRotation = true; // Camera does not rotate relative to arm
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
@@ -213,7 +213,6 @@ void AGrappling_HookCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedCom
 {
 	if(Other && (Other != this))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Overlapped"));
 		OverlappingActor = Other;
 		if(OverlappingActor->GetClass()->ImplementsInterface(UPickup_interface::StaticClass()))
 		{

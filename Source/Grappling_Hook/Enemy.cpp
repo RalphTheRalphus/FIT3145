@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Enemy.h"
-
+#include "EnemyAI_Controller.h"
 // Sets default values
 AEnemy::AEnemy()
 {

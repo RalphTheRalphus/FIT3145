@@ -65,18 +65,18 @@ void AGrapple_Hook::Tick(float DeltaTime)
 				FVector DirectionVec = PlayerToGrapple + Player->GetFollowCamera()->GetForwardVector();
 				//DirectionVec.Normalize(0.0001);
 				//Player->SetActorLocation(Player->GetActorLocation() + 1000 * DirectionVec * DeltaTime);
-				Player->LaunchCharacter(DirectionVec * 2000 * DeltaTime, false, false);
+				Player->LaunchCharacter(DirectionVec * 3000 * DeltaTime, false, false);
 			}
 			else //if(FVector::DotProduct(SurfaceNormal, vec) < -0.2)
 			{
 				hook = false;
-				Player->LaunchCharacter(FVector(0,0,-1000), false, false);
+				Player->LaunchCharacter(FVector(0,0,-2000), false, false);
 				Destroy();
 			}
 			if(FVector::Dist(GrapplePoint, Player->GetActorLocation()) < 200 || FVector::Dist(GrapplePoint, Player->GetActorLocation()) > 3000)
 			{
 				hook = false;
-				Player->LaunchCharacter(FVector(0,0,-1000), false, false);
+				Player->LaunchCharacter(FVector(0,0,-2000), false, false);
 				Destroy();
 			}
 		}
