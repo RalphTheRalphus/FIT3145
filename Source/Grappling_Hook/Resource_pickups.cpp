@@ -4,6 +4,8 @@
 #include "Resource_pickups.h"
 #include "Kismet/GameplayStatics.h"
 #include "Grappling_HookCharacter.h"
+#include "InventoryComponent.h"
+#include "Item.h"
 
 // Sets default values
 AResource_pickups::AResource_pickups()
@@ -40,8 +42,14 @@ void AResource_pickups::Actions_Implementation()
 	if(Player)
 	{
 		//AResource_pickups* Copy = Cast<AResource_pickups>(this);
-		Player->Inventory.Add(this);
+
+		UInventoryComponent* NewInventory = Cast<UInventoryComponent>(Player->GetComponentByClass(UInventoryComponent::StaticClass()));
+		if(NewInventory && Item)
+		{
+			NewInventory->AddItem(Item);
+		}
 		GEngine->AddOnScreenDebugMessage(1,1,FColor::Red, TEXT("Resource Collected"));
+
 		Destroy();
 	}
 }

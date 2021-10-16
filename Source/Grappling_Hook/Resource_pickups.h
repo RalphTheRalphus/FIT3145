@@ -19,6 +19,8 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Mesh")
 	UStaticMeshComponent* Mesh;
 	USceneComponent* RootComponent;
+	UPROPERTY(EditAnywhere, Category = "Item")
+	class UItem* Item;
 
 protected:
 	// Called when the game starts or when spawned

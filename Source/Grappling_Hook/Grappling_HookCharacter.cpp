@@ -7,6 +7,8 @@
 #include "Grapple_Hook.h"
 #include "Action_Interface.h"
 #include "DrawDebugHelpers.h"
+#include "Item.h"
+#include "InventoryComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -47,6 +49,10 @@ AGrappling_HookCharacter::AGrappling_HookCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = true; // Camera does not rotate relative to arm
+
+	// Create Inventory
+	Inventory = CreateDefaultSubobject<UInventoryComponent>(TEXT("Inventory"));
+	Inventory->Capacity = 20;
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
@@ -201,9 +207,14 @@ void AGrappling_HookCharacter::CollectResource()
 
 void AGrappling_HookCharacter::ShowInventory()
 {
-	for(int i = 0; i < Inventory.Num(); i++)
+}
+
+void AGrappling_HookCharacter::UseItem(class UItem* Item)
+{
+	if(Item)
 	{
-		GEngine->AddOnScreenDebugMessage(i, 3, FColor::Green, FString::Printf(TEXT("Inventory: %s"), *Inventory[i]->GetName()));
+		Item->Use(this);
+		Item->OnUse(this); //bp event
 	}
 }
 

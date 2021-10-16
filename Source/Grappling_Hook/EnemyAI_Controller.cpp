@@ -147,7 +147,6 @@ void AEnemyAI_Controller::EnemyAttack()
 void AEnemyAI_Controller::OnSensesUpdated(AActor* SensedActor, FAIStimulus Stimulus)
 {
 	APawn* TargetPlayer = Cast<APawn>(SensedActor);
-	UE_LOG(LogTemp, Warning, TEXT("Stimulus Type Name: %s"), *Stimulus.Type.Name.ToString());
 	if(TargetPlayer && TargetPlayer->IsPlayerControlled())
 	{
 		if(Stimulus.WasSuccessfullySensed())
