@@ -14,5 +14,5 @@ class GRAPPLING_HOOK_API UResourceItem : public UItem
 {
 	GENERATED_BODY()
 
-	
+	virtual void Use(AGrappling_HookCharacter* Character) override;
 };

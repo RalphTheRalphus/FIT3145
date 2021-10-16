@@ -33,15 +33,18 @@ void UInventoryComponent::BeginPlay()
 
 bool UInventoryComponent::AddItem(UItem* Item)
 {
+	for(auto& item: Items)
+	{
+		if(item->IsA(Item->GetClass()))
+		{
+			item->ItemQuantity += 1;
+			OnInventoryUpdated.Broadcast();
+			return true;
+		}
+	}
 	if(Items.Num() >= Capacity || !Item)
 	{
 		return false;
-	}
-	if(Items.Contains(Item))
-	{
-		Item->ItemQuantity += 1;
-		UE_LOG(LogTemp, Warning, TEXT("Inventory count check"))
-		return true;
 	}
 	Item->OwningInventory = this;
 	Items.Add(Item);
@@ -52,6 +55,15 @@ bool UInventoryComponent::AddItem(UItem* Item)
 
 bool UInventoryComponent::RemoveItem(UItem* Item)
 {
+	for(auto& item: Items)
+	{
+		if(item->IsA(Item->StaticClass()))
+		{
+			item->ItemQuantity -= 1;
+			OnInventoryUpdated.Broadcast();
+			return true;
+		}
+	}
 	if(Item)
 	{
 		Item->OwningInventory = nullptr;
