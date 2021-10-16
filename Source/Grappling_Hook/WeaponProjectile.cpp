@@ -1,9 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
+#define COLLISION_ENEMY ECC_GameTraceChannel2
 
 #include "WeaponProjectile.h"
 #include "Enemy.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AWeaponProjectile::AWeaponProjectile()
@@ -22,7 +23,6 @@ void AWeaponProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 	DirectionalVec = GetActorForwardVector();
-	
 	if(PhysicsEnabled)
 		ProjectileMesh->SetSimulatePhysics(true);
 	
@@ -47,10 +47,10 @@ void AWeaponProjectile::Tick(float DeltaTime)
 	}
 	if(Grenade && ProjTimerRef <= 0)
 	{
-		float count = 0;
+
 		Start = ProjectileMesh->GetComponentLocation();
 		FCollisionShape CollisionShape = FCollisionShape::MakeSphere(800);
-		bool IsHit = GetWorld()->SweepMultiByChannel(OutHits, Start, Start, FQuat::Identity, ECC_GameTraceChannel3, CollisionShape);
+		bool IsHit = GetWorld()->SweepMultiByChannel(OutHits, Start, Start, FQuat::Identity, ECC_Visibility, CollisionShape);
 		if(IsHit)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Hit"));
@@ -65,12 +65,10 @@ void AWeaponProjectile::Tick(float DeltaTime)
 					SpawnDestroyEffect(Enemy->GetActorLocation());
 					
 				}
-				
 			}
 		}
 		Destroy();
 	}
-
 }
 
 void AWeaponProjectile::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* Other, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,

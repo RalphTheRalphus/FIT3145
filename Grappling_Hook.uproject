@@ -11,7 +11,8 @@
 			"AdditionalDependencies": [
 				"CableComponent",
 				"Engine",
-				"AIModule"
+				"AIModule",
+				"CoreUObject"
 			]
 		}
 	],

@@ -4,16 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Pickup_interface.h"
 #include "Grappling_HookCharacter.generated.h"
 
 class ABioLegs;
 class AGrapple_Hook;
 class APlayerWeapon;
+
+
 UCLASS(config=Game)
 class AGrappling_HookCharacter : public ACharacter
 {
 	GENERATED_BODY()
-
+	
 	/** Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;
@@ -21,6 +24,11 @@ class AGrappling_HookCharacter : public ACharacter
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
+
+	/** Inventory Component */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	class UInventoryComponent* Inventory;
+
 public:
 	AGrappling_HookCharacter();
 
@@ -96,6 +104,14 @@ public:
 	void Shoot();
 	UFUNCTION()
 	void Skill();
+	UFUNCTION()
+	void Glide();
+	UFUNCTION()
+	void StopGlide();
+	UFUNCTION()
+	void CollectResource();
+	UFUNCTION()
+	void ShowInventory();
 
 	//Trace
 	UPROPERTY()
@@ -115,5 +131,13 @@ public:
 	bool CanGrappleToSurface;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool GameOver;
-};
 
+	//Player Inventory
+	UFUNCTION(BlueprintCallable, Category = "Items")
+	void UseItem(class UItem* Item);
+	AActor* OverlappingActor;
+	
+	UFUNCTION()
+	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* Other, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+		
+};

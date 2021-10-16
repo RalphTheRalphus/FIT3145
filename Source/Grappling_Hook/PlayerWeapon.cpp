@@ -69,6 +69,12 @@ void APlayerWeapon::Shoot()
 {
 	if(ShootTimer <= 0)
 	{
+		if(Player)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("REcoil"));
+			Player->AddControllerYawInput(FMath::FRandRange(-0.25, 0.25));
+			Player->AddControllerPitchInput(FMath::FRandRange(-0.25, -0.25));
+		}
 		ShootTimer = ShootDelay;
 		RotateFire = true;
 		RotateTimeOut = 0.5f;
@@ -85,6 +91,12 @@ void APlayerWeapon::Skill()
 {
 	if(SkillTimer <= 0)
 	{
+		if(Player)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("REcoil"));
+			Player->AddControllerYawInput(FMath::FRandRange(-2, 2));
+			Player->AddControllerPitchInput(FMath::FRandRange(-2, -2));
+		}
 		SkillTimer = SkillDelay;
 		RotateFire = true;
 		RotateTimeOut = 0.5f;

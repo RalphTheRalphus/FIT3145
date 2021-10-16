@@ -12,6 +12,7 @@
 #include "NiagaraComponent.h"
 #include "NavigationSystem.h"
 #include "Perception/AISenseConfig_Sight.h"
+#include "Perception/AISenseConfig_Damage.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "EnemyAI_Controller.generated.h"
 
@@ -47,6 +48,10 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Sight")
 	UAISenseConfig_Sight* SightConfig;
 
+
+	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+	UAISenseConfig_Damage* DamageConfig;
+	
 	UNavigationSystemV1* NavSystem;
 	APawn* Player;
 	UPROPERTY(EditDefaultsOnly, Category = "Blackboard")

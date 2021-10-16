@@ -9,6 +9,7 @@ AEnemyAI_Controller::AEnemyAI_Controller()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	SightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("Sight Config"));
+	DamageConfig = CreateDefaultSubobject<UAISenseConfig_Damage>(TEXT("Damage Config"));
 	SetPerceptionComponent(*CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("Perception Component")));
 	
 	//Set sight
@@ -25,9 +26,11 @@ AEnemyAI_Controller::AEnemyAI_Controller()
 	//set dominant sense
 	GetPerceptionComponent()->SetDominantSense(SightConfig->GetSenseImplementation());
 	GetPerceptionComponent()->ConfigureSense(*SightConfig);
-
+	GetPerceptionComponent()->ConfigureSense(*DamageConfig);
+	
 	//On perception updated
 	GetPerceptionComponent()->OnTargetPerceptionUpdated.AddDynamic(this, &AEnemyAI_Controller::OnSensesUpdated);
+
 }
 
 void AEnemyAI_Controller::BeginPlay()
@@ -151,7 +154,7 @@ void AEnemyAI_Controller::OnSensesUpdated(AActor* SensedActor, FAIStimulus Stimu
 			Player = TargetPlayer;
 			BlackboardComponent->SetValueAsBool("Patrol", false);
 		}
-		else if(!LineOfSightTo(Player))
+		else if(Player && !LineOfSightTo(Player))
 		{
 			Player = nullptr;
 			BlackboardComponent->ClearValue("PlayerLoc");
