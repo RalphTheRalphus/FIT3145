@@ -66,9 +66,7 @@ void AGrapple_Hook::Tick(float DeltaTime)
 				FVector DirectionVec = PlayerToGrapple + Player->GetFollowCamera()->GetForwardVector();
 				//DirectionVec.Normalize(0.0001);
 				//Player->SetActorLocation(Player->GetActorLocation() + 1000 * DirectionVec * DeltaTime);
-				Player->LaunchCharacter(DirectionVec * 1000 * DeltaTime, false, false);
-				
-				
+				Player->LaunchCharacter(DirectionVec * 1100 * DeltaTime, false, false);
 			}
 			else //if(FVector::DotProduct(SurfaceNormal, vec) < -0.2)
 			{
@@ -91,7 +89,7 @@ void AGrapple_Hook::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, cl
 	hook = true;
 	GrapplePoint = GetActorLocation();
 	// get reference to attached object
-	Player->GetCharacterMovement()->GravityScale = 0.15;
+	Player->GetCharacterMovement()->GravityScale = 0.20;
 	Player->LaunchCharacter(FVector(0,0,500), false, true);
 }
 
