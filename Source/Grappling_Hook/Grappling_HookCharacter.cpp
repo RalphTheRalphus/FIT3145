@@ -83,8 +83,6 @@ void AGrappling_HookCharacter::SetupPlayerInputComponent(class UInputComponent* 
 	PlayerInputComponent->BindAction("Glide", IE_Released, this, &AGrappling_HookCharacter::StopGlide);
 	//Collect Resources
 	PlayerInputComponent->BindAction("Collect", IE_Pressed, this, &AGrappling_HookCharacter::CollectResource);
-	//Show Inventory
-	PlayerInputComponent->BindAction("ShowInventory", IE_Pressed, this, &AGrappling_HookCharacter::ShowInventory);
 	
 	
 	PlayerInputComponent->BindAxis("MoveForward", this, &AGrappling_HookCharacter::MoveForward);
@@ -203,10 +201,6 @@ void AGrappling_HookCharacter::CollectResource()
 			IAction_Interface::Execute_Actions(OverlappingActor);
 		}
 	}
-}
-
-void AGrappling_HookCharacter::ShowInventory()
-{
 }
 
 void AGrappling_HookCharacter::UseItem(class UItem* Item)

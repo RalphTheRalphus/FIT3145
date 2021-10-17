@@ -110,8 +110,6 @@ public:
 	void StopGlide();
 	UFUNCTION()
 	void CollectResource();
-	UFUNCTION()
-	void ShowInventory();
 
 	//Trace
 	UPROPERTY()
