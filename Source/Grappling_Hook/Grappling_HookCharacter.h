@@ -99,7 +99,7 @@ public:
 	UFUNCTION()
 	void Grapple();
 	UFUNCTION()
-	void CanGrapple();
+	void CanGrapple(bool IsHit);
 	UFUNCTION()
 	void Shoot();
 	UFUNCTION()
@@ -121,7 +121,7 @@ public:
 	//Player Attributes
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	float Health = 75;
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float MaxHealth = 100;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float Ammo = 100;

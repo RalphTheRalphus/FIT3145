@@ -14,4 +14,9 @@ class GRAPPLING_HOOK_API UUpgrade_Item : public UItem
 {
 	GENERATED_BODY()
 	virtual void Use(AGrappling_HookCharacter* Character) override;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Upgrade Item Type")
+	bool Health_Upgrade;
+	UPROPERTY(EditDefaultsOnly, Category = "Upgrade Item Type")
+	bool Sentinel_Damage_Upgrade;
 };

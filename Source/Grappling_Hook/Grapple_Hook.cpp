@@ -63,9 +63,7 @@ void AGrapple_Hook::Tick(float DeltaTime)
 			SurfaceNormal.Normalize();
 			if(FVector::DotProduct(SurfaceNormal, vec) > 0)
 			{
-				FVector DirectionVec = PlayerToGrapple + Player->GetFollowCamera()->GetForwardVector() + (Player->GetFollowCamera()->GetUpVector() * 1.2);
-				GEngine->AddOnScreenDebugMessage(2, 1, FColor::Black, FString::Printf(TEXT("Grapple: %s"), *DirectionVec.ToString()));
-
+				FVector DirectionVec = PlayerToGrapple + Player->GetFollowCamera()->GetForwardVector() + (Player->GetFollowCamera()->GetUpVector() * 1.3);
 				Player->LaunchCharacter(DirectionVec * 1200 * DeltaTime, false, false);
 				
 			}
@@ -88,7 +86,6 @@ void AGrapple_Hook::Tick(float DeltaTime)
 void AGrapple_Hook::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* Other, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
 	const FHitResult& SweepResult)
 {
-	GEngine->AddOnScreenDebugMessage(1, 1, FColor::Red, TEXT("Overlapped"));
 	hook = true;
 	GrapplePoint = GetActorLocation();
 	// get reference to attached object

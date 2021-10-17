@@ -17,6 +17,10 @@ public:
 	// Sets default values for this actor's properties
 	APlayerWeapon();
 
+	//Weapon Damage
+	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+	float WeaponDamage;
+	
 	//Weapon Mesh
 	UPROPERTY(EditDefaultsOnly, Category = "Mesh")
 	UStaticMeshComponent* WeaponMesh;

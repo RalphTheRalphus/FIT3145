@@ -83,6 +83,7 @@ void APlayerWeapon::Shoot()
 			//GEngine->AddOnScreenDebugMessage(1,1,FColor::Red, TEXT("FIRE!!!!"));
 			FVector SpawnLoc = GetActorLocation();
 			WeaponProjectile = GetWorld()->SpawnActor<AWeaponProjectile>(WeaponProjectileClass, SpawnLoc, GetActorRotation());
+			WeaponProjectile->DamageAmount = WeaponDamage;
 		}
 	}
 }
