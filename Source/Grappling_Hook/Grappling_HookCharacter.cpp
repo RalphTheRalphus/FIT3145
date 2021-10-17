@@ -121,9 +121,12 @@ void AGrappling_HookCharacter::Tick(float DeltaSeconds)
 	}
 	Start = GetFollowCamera()->GetComponentLocation() + GetFollowCamera()->GetForwardVector() * 150;
 	End = Start + GetFollowCamera()->GetForwardVector() * 3000;
-	GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECollisionChannel::ECC_Visibility);
+	bool ishit = GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECollisionChannel::ECC_Visibility);
 	//Check if the player can grapple on surface and change UI element accordingly
-	CanGrapple();
+	if(ishit)
+		CanGrappleToSurface = true;
+	else
+		CanGrappleToSurface = false;
 	//DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 1, 0,1);
 }
 
@@ -148,7 +151,7 @@ void AGrappling_HookCharacter::CanGrapple()
 
 void AGrappling_HookCharacter::Grapple()
 {
-	if(GrappleHooked)
+	if(GrappleHooked && Grapple_Hook)
 	{
 		GrappleHooked = false;
 		Grapple_Hook->hook = false;
