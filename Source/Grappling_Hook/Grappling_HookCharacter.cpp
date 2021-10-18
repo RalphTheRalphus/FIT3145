@@ -149,22 +149,25 @@ void AGrappling_HookCharacter::CanGrapple(bool Ishit)
 
 void AGrappling_HookCharacter::Grapple()
 {
-	if(GrappleHooked && Grapple_Hook)
+	if(CanGrappleToSurface)
 	{
-		GrappleHooked = false;
-		Grapple_Hook->hook = false;
-		Grapple_Hook->Destroy();
-	}
-	if(IsHit)
-	{
-		if(OutHit.GetActor())
-		{			
-			if(GrappleHook_Class && OutHit.GetActor()->bGenerateOverlapEventsDuringLevelStreaming)
-			{
-				FVector SpawnLoc = (GetFollowCamera()->GetForwardVector() * 150) + (GetActorLocation() + FVector(0,0,100));
-				Grapple_Hook = GetWorld()->SpawnActor<AGrapple_Hook>(GrappleHook_Class, SpawnLoc, (OutHit.Location - SpawnLoc).Rotation());
-				Grapple_Hook->SurfaceNormal = OutHit.ImpactNormal;
-				GrappleHooked = true;
+		if(GrappleHooked && Grapple_Hook)
+		{
+			GrappleHooked = false;
+			Grapple_Hook->hook = false;
+			Grapple_Hook->Destroy();
+		}
+		if(IsHit && OutHit.bBlockingHit)
+		{
+			if(OutHit.GetActor())
+			{			
+				if(GrappleHook_Class && OutHit.GetActor()->bGenerateOverlapEventsDuringLevelStreaming)
+				{
+					FVector SpawnLoc = (GetFollowCamera()->GetForwardVector() * 150) + (GetActorLocation() + FVector(0,0,100));
+					Grapple_Hook = GetWorld()->SpawnActor<AGrapple_Hook>(GrappleHook_Class, SpawnLoc, (OutHit.Location - SpawnLoc).Rotation());
+					Grapple_Hook->SurfaceNormal = OutHit.ImpactNormal;
+					GrappleHooked = true;
+				}
 			}
 		}
 	}

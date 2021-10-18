@@ -40,6 +40,8 @@ public:
 	float ProjectileTimer;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Projectile Type")
 	float DamageRadius;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Projectile Type")
+	float SkillDamageAmount;
 	float DamageAmount;
 
 	float ProjTimerRef;

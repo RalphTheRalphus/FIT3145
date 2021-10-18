@@ -53,15 +53,15 @@ void AWeaponProjectile::Tick(float DeltaTime)
 		bool IsHit = GetWorld()->SweepMultiByChannel(OutHits, Start, Start, FQuat::Identity, ECC_Visibility, CollisionShape);
 		if(IsHit)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Hit"));
 			TArray<AEnemy*> IgnoreEnemy;
 			for(auto& OutHit: OutHits)
 			{
 				AEnemy* Enemy = Cast<AEnemy>(OutHit.GetActor());
 				if(Enemy && !IgnoreEnemy.Contains(Enemy))
 				{
+					UE_LOG(LogTemp, Warning, TEXT("Hit"));
 					IgnoreEnemy.Add(Enemy);
-					Enemy->Health -= DamageAmount;
+					Enemy->Health -= SkillDamageAmount;
 					SpawnDestroyEffect(Enemy->GetActorLocation());
 					
 				}
