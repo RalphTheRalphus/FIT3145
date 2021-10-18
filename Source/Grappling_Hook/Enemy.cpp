@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Enemy.h"
+#include "ShieldDrone.h"
 #include "EnemyAI_Controller.h"
 // Sets default values
 AEnemy::AEnemy()
@@ -14,6 +15,11 @@ AEnemy::AEnemy()
 void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
+	if(ShieldDroneClass)
+	{
+		ShieldDrone = GetWorld()->SpawnActor<AShieldDrone>(ShieldDroneClass);
+		HasShield = true;
+	}
 
 }
 
@@ -24,6 +30,12 @@ void AEnemy::Tick(float DeltaTime)
 	if(Health <= 0)
 	{
 		Destroy();
+	}
+	if(ShieldDrone)
+	{
+		FVector TargetDroneLoc = GetMesh()->GetSocketLocation("Drone");
+		FVector SetLoc = FMath::VInterpTo(ShieldDrone->GetActorLocation(), TargetDroneLoc, DeltaTime, 15);
+		ShieldDrone->SetActorLocation(SetLoc);
 	}
 
 }

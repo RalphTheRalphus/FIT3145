@@ -7,6 +7,7 @@
 #include "GameFramework/Character.h"
 #include "Enemy.generated.h"
 
+
 //class ADamageOnOverlap;
 UCLASS()
 class GRAPPLING_HOOK_API AEnemy : public ACharacter
@@ -39,6 +40,13 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Enemy Attack")
 	float AttackSpeed;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Shield")
+	TSubclassOf<class AShieldDrone> ShieldDroneClass;
+	UPROPERTY(BlueprintReadOnly, Category = "Shield")
+	class AShieldDrone* ShieldDrone;
+	UPROPERTY(BlueprintReadWrite, Category = "Shield")
+	bool HasShield;
+	
 	//Enemy weapon
 	UPROPERTY(EditDefaultsOnly, Category = "Enemy Weapon")
 	TSubclassOf<ADamageOnOverlap> EnemyWeaponClass;

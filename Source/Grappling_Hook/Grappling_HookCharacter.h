@@ -117,6 +117,7 @@ public:
 	FVector Start;
 	FVector End;
 	ECollisionChannel CollisionChannel;
+	bool IsHit;
 
 	//Player Attributes
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)

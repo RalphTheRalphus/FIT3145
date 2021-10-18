@@ -78,11 +78,9 @@ void AWeaponProjectile::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp
 	AEnemy* EnemyCharacter = Cast<AEnemy>(Other);
 	if(EnemyCharacter)
 	{
-		EnemyCharacter->Health -= DamageAmount;
-		//GEngine->AddOnScreenDebugMessage(4,1,FColor::Red,FString::Printf(TEXT("Enemy Hit : Health %f!!!"), Enemy->Health));
-		
+		if(!EnemyCharacter->HasShield)
+			EnemyCharacter->Health -= DamageAmount;
 	}
-
 	SpawnDestroyEffect(GetActorLocation());
 	Destroy();
 }

@@ -121,9 +121,9 @@ void AGrappling_HookCharacter::Tick(float DeltaSeconds)
 	}
 	Start = GetFollowCamera()->GetComponentLocation() + GetFollowCamera()->GetForwardVector() * 150;
 	End = Start + GetFollowCamera()->GetForwardVector() * 3000;
-	bool Ishit = GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECollisionChannel::ECC_Visibility);
+	IsHit = GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECollisionChannel::ECC_Visibility);
 	//Check if the player can grapple on surface and change UI element accordingly
-	CanGrapple(Ishit);
+	CanGrapple(IsHit);
 	//DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 1, 0,1);
 }
 
@@ -136,9 +136,9 @@ void AGrappling_HookCharacter::ThrowDisc()
 	}
 }
 
-void AGrappling_HookCharacter::CanGrapple(bool IsHit)
+void AGrappling_HookCharacter::CanGrapple(bool Ishit)
 {
-	if(IsHit)
+	if(Ishit)
 		if(OutHit.GetActor() && OutHit.GetActor()->bGenerateOverlapEventsDuringLevelStreaming)
 			CanGrappleToSurface = true;
 		else
@@ -155,14 +155,17 @@ void AGrappling_HookCharacter::Grapple()
 		Grapple_Hook->hook = false;
 		Grapple_Hook->Destroy();
 	}
-	if(OutHit.bBlockingHit && OutHit.GetActor())
+	if(IsHit)
 	{
-		if(GrappleHook_Class && OutHit.GetActor()->bGenerateOverlapEventsDuringLevelStreaming)
-		{
-			FVector SpawnLoc = (GetFollowCamera()->GetForwardVector() * 150) + (GetActorLocation() + FVector(0,0,100));
-			Grapple_Hook = GetWorld()->SpawnActor<AGrapple_Hook>(GrappleHook_Class, SpawnLoc, (OutHit.Location - SpawnLoc).Rotation());
-			Grapple_Hook->SurfaceNormal = OutHit.ImpactNormal;
-			GrappleHooked = true;
+		if(OutHit.GetActor())
+		{			
+			if(GrappleHook_Class && OutHit.GetActor()->bGenerateOverlapEventsDuringLevelStreaming)
+			{
+				FVector SpawnLoc = (GetFollowCamera()->GetForwardVector() * 150) + (GetActorLocation() + FVector(0,0,100));
+				Grapple_Hook = GetWorld()->SpawnActor<AGrapple_Hook>(GrappleHook_Class, SpawnLoc, (OutHit.Location - SpawnLoc).Rotation());
+				Grapple_Hook->SurfaceNormal = OutHit.ImpactNormal;
+				GrappleHooked = true;
+			}
 		}
 	}
 }
