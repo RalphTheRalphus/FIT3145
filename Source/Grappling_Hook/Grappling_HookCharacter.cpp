@@ -157,11 +157,11 @@ void AGrappling_HookCharacter::Grapple()
 			Grapple_Hook->hook = false;
 			Grapple_Hook->Destroy();
 		}
-		if(IsHit && OutHit.bBlockingHit)
+		if(IsHit && OutHit.IsValidBlockingHit() && OutHit.bBlockingHit)
 		{
-			if(OutHit.GetActor())
+			if(OutHit.GetActor() && OutHit.GetActor()->bGenerateOverlapEventsDuringLevelStreaming)
 			{			
-				if(GrappleHook_Class && OutHit.GetActor()->bGenerateOverlapEventsDuringLevelStreaming)
+				if(GrappleHook_Class)
 				{
 					FVector SpawnLoc = (GetFollowCamera()->GetForwardVector() * 150) + (GetActorLocation() + FVector(0,0,100));
 					Grapple_Hook = GetWorld()->SpawnActor<AGrapple_Hook>(GrappleHook_Class, SpawnLoc, (OutHit.Location - SpawnLoc).Rotation());
